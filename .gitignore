@@ -1,0 +1,31 @@
+# 环境与真实配置
+.env
+config/config.yaml
+
+# 运行时数据
+_internal/
+workspace/*
+!workspace/.gitkeep
+*.bak
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 编辑器与系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

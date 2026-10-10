@@ -1,0 +1,16 @@
+{
+  "protocol": "ds-agent/1.0",
+  "mode": "task",
+  "task": {
+    "name": "你好世界",
+    "summary": "创建并运行一个 Python 脚本",
+    "vars": {"NAME": "hello"},
+    "steps": [
+      {"action": "write_file",
+       "path": "{{NAME}}.py",
+       "content": "print('hello, ds-agent')\n"},
+      {"action": "run_code",
+       "path": "{{NAME}}.py"}
+    ]
+  }
+}

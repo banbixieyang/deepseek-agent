@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ds-agent"
+version = "0.1.0"
+description = "可审批、可切换后端的本地 Agent 执行器；默认走 DeepSeek 官方 API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "半壁斜阳-_-" }]
+keywords = ["agent", "deepseek", "automation", "local-executor"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "PyYAML>=6.0",
+  "requests>=2.31",
+]
+
+[project.optional-dependencies]
+# 仅使用默认 API 后端无需安装下面的 GUI 依赖
+web = [
+  "pyautogui>=0.9.54",
+  "pyperclip>=1.8.2",
+  "pygetwindow>=0.0.9",
+]
+playwright = ["playwright>=1.40"]
+admin = [
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "jinja2>=3.1",
+  "python-multipart>=0.0.9",
+]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=5.0",
+  "ruff>=0.4",
+]
+all = [
+  "pyautogui>=0.9.54",
+  "pyperclip>=1.8.2",
+  "pygetwindow>=0.0.9",
+  "playwright>=1.40",
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "jinja2>=3.1",
+  "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+ds-agent = "ds_agent.app:main"
+ds-agent-admin = "ds_agent.admin:main"
+ds-agent-config = "ds_agent.config_cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ds_agent = ["resources/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# 只保留真正有价值的规则；中文项目文案/注释不视为问题。
+# - E/W: pycodestyle 错误与警告
+# - F: pyflakes（未用导入、未定义名等真实缺陷）
+# - I: import 排序
+# - UP: 类型注解现代化（typing.List -> list 等）
+select = ["E", "W", "F", "I", "UP"]
+ignore = [
+  "E501",  # 行长交给 ruff format 统一处理，不在 lint 层报
+]
+
+[tool.ruff.lint.per-file-ignores]
+# 测试里 assert 是标准写法
+"tests/**" = ["E501"]

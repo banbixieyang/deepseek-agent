@@ -1,0 +1,118 @@
+# ds-agent 示例配置
+# 复制为 config/config.yaml 后修改。真实配置不入库。
+#
+# 免责声明：本项目与 DeepSeek 官方无任何关联。
+# 网页后端存在违反 DeepSeek 服务条款的风险，仅供个人学习研究。
+
+# ---------- 后端选择 ----------
+# type: api | web | openai | ollama
+#   api    DeepSeek 官方 API（推荐，默认，无需浏览器）
+#   web    浏览器自动化（高风险，需显式确认）
+#   openai 任意 OpenAI 兼容服务
+#   ollama 本地 Ollama
+backend:
+  type: api
+  api:
+    provider: deepseek            # deepseek | openai | ollama
+    api_key: ""                   # 留空则读环境变量 DEEPSEEK_API_KEY
+    base_url: "https://api.deepseek.com"
+    model: "deepseek-chat"
+    temperature: 0.7
+    max_tokens: 4096
+    timeout: 120
+    retry: 3
+    min_interval_seconds: 1.0
+  web:
+    enabled: false                # 必须显式开启
+    acknowledge_risk: false       # 必须显式确认
+    ds_read_script: ""            # 外部依赖，启用 web 时必填；启动器自动填写
+    # 内置下载地址：ds_read.py 来自 VZService/SKILL_web-ds-read（外部依赖，本项目不分发）。
+    # 覆盖优先级：命令行 --ds-read-url > 环境变量 DS_AGENT_DS_READ_URL > 本字段。
+    # 详见 ACKNOWLEDGMENTS.md。
+    # 国内网络通常无法直接访问 raw.githubusercontent.com。
+    # 若默认地址超时，把下面的 ds_read_url 换成任一镜像地址：
+    #   https://ghproxy.com/https://raw.githubusercontent.com/VZService/SKILL_web-ds-read/main/scripts/ds_read.py
+    #   https://gh-proxy.com/https://raw.githubusercontent.com/VZService/SKILL_web-ds-read/main/scripts/ds_read.py
+    ds_read_url: "https://raw.githubusercontent.com/VZService/SKILL_web-ds-read/main/scripts/ds_read.py"
+    python_executable: "python"
+    url: "https://chat.deepseek.com"
+    window_titles:
+      - "Mozilla Firefox"
+      - "Firefox"
+    session_id: ""
+
+# ---------- 网页驱动（仅 web 后端使用） ----------
+# type: pyautogui | playwright | cdp
+driver:
+  type: pyautogui
+  click_ratio_new_session: 0.48
+  click_ratio_existing: 0.85
+  activate_retry_click_offset: 100
+
+# ---------- 路径 ----------
+paths:
+  workspace_dir: workspace
+  internal_dir: _internal
+  backup_dir: _internal/backups
+  log_dir: _internal/logs
+
+# ---------- 循环 ----------
+loop:
+  max_rounds: 200
+  max_format_retry: 3
+  poll_interval: 3
+  reply_timeout: 240
+  stable_required: 4
+  min_wait: 10
+  batch_approval_threshold: 5
+
+# ---------- 人类行为模拟（仅 web 后端使用） ----------
+human:
+  delay_before_send_min: 1.5
+  delay_before_send_max: 3.5
+  delay_before_enter_min: 0.8
+  delay_before_enter_max: 2.0
+  min_interval_between_messages: 5.0
+
+# ---------- 审批 ----------
+approval:
+  send_to_deepseek: true
+  write_file: true
+  tools:
+    - write_file
+    - edit_file
+    - append_file
+    - delete_file
+    - move_file
+    - copy_file
+
+# ---------- 附件 ----------
+attach:
+  max_file_chars: 50000
+  max_folder_files: 100
+  max_folder_total_chars: 200000
+  max_per_file_chars: 20000
+  skip_dirs:
+    - .git
+    - __pycache__
+    - node_modules
+    - .venv
+    - dist
+    - build
+  skip_exts:
+    - .exe
+    - .dll
+    - .so
+    - .pyc
+    - .png
+    - .jpg
+    - .zip
+
+# ---------- 日志 ----------
+logging:
+  level: INFO
+  to_file: true
+  keep_days: 7
+
+# 可选。仅诊断页探测，失败不阻塞启动。
+ollama_host: http://127.0.0.1:11434
