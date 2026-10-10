@@ -8,7 +8,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 
 def project_root() -> Path:
@@ -103,7 +102,7 @@ def _ds_read_target() -> Path:
     return project_root() / '_internal' / 'ds_read.py'
 
 
-def prepare_ds_read(url: Optional[str], local_file: Optional[str]) -> Path:
+def prepare_ds_read(url: str | None, local_file: str | None) -> Path:
     target = _ds_read_target()
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.is_file():
@@ -178,7 +177,7 @@ def sync_ds_read_path(cfg_path: Path, ds_read: Path) -> None:
         print('[启动器] 更新 config.yaml 失败（不影响启动）：' + str(exc))
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog='ds_agent.launcher', description='ds-agent 一键启动器')
     parser.add_argument('--audit', action='store_true', help='只打印将发送内容，不实际发送')
     parser.add_argument('--with-web', action='store_true', help='安装网页后端 GUI 依赖')
